@@ -1,0 +1,30 @@
+-- This script creates a police department for your FiveM server
+
+-- Load ESX library
+ESX = nil
+
+Citizen.CreateThread(function()
+  while ESX == nil do
+    TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+    Citizen.Wait(0)
+  end
+end)
+
+-- Define the job for the police department
+ESX.RegisterJob('police', 'Polizist', function(xPlayer)
+  xPlayer.setJob('police', 0)
+end)
+
+-- Give players a police uniform when they join the police department
+RegisterServerEvent('police:giveUniform')
+AddEventHandler('police:giveUniform', function()
+  local xPlayer = ESX.GetPlayerFromId(source)
+  xPlayer.addInventoryItem('police_uniform', 1)
+end)
+
+-- Remove players' police uniform when they leave the police department
+RegisterServerEvent('police:removeUniform')
+AddEventHandler('police:removeUniform', function()
+  local xPlayer = ESX.GetPlayerFromId(source)
+  xPlayer.removeInventoryItem('police_uniform', 1)
+end)
